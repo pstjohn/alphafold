@@ -34,7 +34,7 @@ class Jackhmmer:
                *,
                binary_path: str,
                database_path: str,
-               n_cpu: int = 8,
+               n_cpu: Optional[int] = None,
                n_iter: int = 1,
                e_value: float = 0.0001,
                z_value: Optional[int] = None,
@@ -74,7 +74,11 @@ class Jackhmmer:
       logging.error('Could not find Jackhmmer database %s', database_path)
       raise ValueError(f'Could not find Jackhmmer database {database_path}')
 
-    self.n_cpu = n_cpu
+    if n_cpu:
+      self.n_cpu = n_cpu
+    else:
+      self.n_cpu = int(os.getenv('JACKHMMER_N_CPU', default='8'))
+
     self.n_iter = n_iter
     self.e_value = e_value
     self.z_value = z_value
